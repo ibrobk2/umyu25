@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blink App</title>
+</head>
+<body>
+    <div id="container">
+        <h2>Blink App</h2>
+        <img src="./images/pic_bulboff.gif" alt="">
+    </div>
+    <script>
+      function Blink(){
+    // setInterval(function(){
+    //     document.querySelector("img").src = "./images/pic_bulbon.gif"; 
+    //     setTimeout(function(){
+    //         document.querySelector("img").src = "./images/pic_bulboff.gif"; 
+    //     }, 500);
+    // }, 1000);
+var image =  document.querySelector("img");
+setInterval(function(){
+    image.src = './images/pic_bulbon.gif';
+    setTimeout(function(){
+        image.src = './images/pic_bulboff.gif'; 
+    }, 500);
+}, 1000);
+
+}
+
+Blink();
+
+        
+    </script>
+</body>
+</html>

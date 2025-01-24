@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriv Trading Bot with Strong Indicators</title>
+    <style>
+        :root {
+            --primary-color: #ff444f;
+            --background-color: #f5f7fa;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-color: #e1e4e8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .status-info p {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .button.stop {
+            background-color: #dc3545;
+        }
+
+        .alert {
+            background-color: #dc3545;
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .prediction {
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .prediction.up {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .prediction.down {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .indicators {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .indicator {
+            background-color: var(--background-color);
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .indicator h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .indicator p {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Deriv Trading Bot with Strong Indicators</h1>
+            </div>
+            
+            <div class="grid">
+                <div class="input-group">
+                    <label for="stake-amount">Stake Amount ($)</label>
+                    <input type="number" id="stake-amount" value="10" min="1" step="1">
+                </div>
+                <div class="input-group">
+                    <label for="stop-loss">Stop Loss ($)</label>
+                    <input type="number" id="stop-loss" value="5" min="1" step="1">
+                </div>
+                <div class="input-group">
+                    <label for="take-profit">Take Profit ($)</label>
+                    <input type="number" id="take-profit" value="10" min="1" step="1">
+                </div>
+            </div>
+
+            <div class="status-panel">
+                <div class="status-info">
+                    <p>Balance: $<span id="balance">0.00</span></p>
+                    <p>Prediction: <span id="prediction" class="prediction">0% (Neutral)</span></p>
+                    <p>Current Price: $<span id="current-price">0.00</span></p>
+                </div>
+                <button id="trade-button" class="button">Start Trading</button>
+            </div>
+
+            <div class="indicators">
+                <div class="indicator">
+                    <h3>RSI</h3>
+                    <p id="rsi-value">0</p>
+                </div>
+                <div class="indicator">
+                    <h3>MACD</h3>
+                    <p id="macd-value">0</p>
+                </div>
+                <div class="indicator">
+                    <h3>Bollinger Bands</h3>
+                    <p id="bb-value">0</p>
+                </div>
+            </div>
+
+            <div id="error-alert" class="alert"></div>
+            <div id="chart" class="chart-container"></div>
+        </div>
+    </div>
+
+    <script>
+        class DerivTradingBot {
+            constructor() {
+                this.app_id = 66586; // Replace with your Deriv app ID
+                this.api_token = 'eCLCd3H23HFpq83'; // Replace with your API token token
+                this.connection = null;
+                this.isTrading = false;
+                this.currentPrice = 0;
+                this.balance = 0;
+                this.prediction = 0;
+                this.priceHistory = [];
+                
+                // DOM Elements
+                this.elements = {
+                    stakeAmount: document.getElementById('stake-amount'),
+                    stopLoss: document.getElementById('stop-loss'),
+                    takeProfit: document.getElementById('take-profit'),
+                    tradeButton: document.getElementById('trade-button'),
+                    balanceDisplay: document.getElementById('balance'),
+                    predictionDisplay: document.getElementById('prediction'),
+                    priceDisplay: document.getElementById('current-price'),
+                    errorAlert: document.getElementById('error-alert'),
+                    rsiValue: document.getElementById('rsi-value'),
+                    macdValue: document.getElementById('macd-value'),
+                    bbValue: document.getElementById('bb-value')
+                };
+
+                // Bind event listeners
+                this.elements.tradeButton.addEventListener('click', () => {
+                    this.isTrading ? this.stopTrading() : this.startTrading();
+                });
+
+                // Initialize WebSocket connection
+                this.initializeConnection();
+            }
+
+            initializeConnection() {
+                this.connection = new WebSocket(
+                    `wss://ws.binaryws.com/websockets/v3?app_id=${this.app_id}`
+                );
+
+                this.connection.onopen = () => {
+                    this.authorize();
+                };
+
+                this.connection.onmessage = (msg) => {
+                    const response = JSON.parse(msg.data);
+                    this.handleMessage(response);
+                };
+
+                this.connection.onclose = () => {
+                    this.showError('Connection closed. Retrying...');
+                    setTimeout(() => this.initializeConnection(), 5000);
+                };
+            }
+
+            async authorize() {
+                this.sendMessage({
+                    authorize: this.api_token
+                });
+            }
+
+            sendMessage(data) {
+                if (this.connection && this.connection.readyState === WebSocket.OPEN) {
+                    this.connection.send(JSON.stringify(data));
+                }
+            }
+
+            handleMessage(response) {
+                if (response.error) {
+                    this.showError(response.error.message);
+                    return;
+                }
+
+                if (response.authorize) {
+                    this.getBalance();
+                }
+
+                if (response.balance) {
+                    this.balance = response.balance.balance;
+                    this.elements.balanceDisplay.textContent = this.balance.toFixed(2);
+                }
+
+                if (response.tick) {
+                    this.currentPrice = response.tick.quote;
+                    this.elements.priceDisplay.textContent = this.currentPrice.toFixed(2);
+                    this.priceHistory.push(this.currentPrice);
+                    
+                    if (this.priceHistory.length > 100) {
+                        this.priceHistory.shift();
+                    }
+                    
+                    if (this.isTrading) {
+                        this.updateIndicators();
+                        this.runNeuralNetwork();
+                    }
+                }
+
+                if (response.proposal_open_contract) {
+                    this.monitorTrade(response.proposal_open_contract);
+                }
+            }
+
+            startTrading() {
+                this.isTrading = true;
+                this.elements.tradeButton.textContent = 'Stop Trading';
+                this.elements.tradeButton.classList.add('stop');
+
+                // Subscribe to price updates
+                this.sendMessage({
+                    ticks: 'R_100',
+                    subscribe: 1
+                });
+            }
+
+            stopTrading() {
+                this.isTrading = false;
+                this.elements.tradeButton.textContent = 'Start Trading';
+                this.elements.tradeButton.classList.remove('stop');
+
+                // Unsubscribe from price updates
+                this.sendMessage({
+                    forget_all: 'ticks'
+                });
+            }
+
+            getBalance() {
+                this.sendMessage({
+                    balance: 1,
+                    subscribe: 1
+                });
+            }
+
+            updateIndicators() {
+                const rsi = this.calculateRSI();
+                const macd = this.calculateMACD();
+                const bb = this.calculateBollingerBands();
+
+                this.elements.rsiValue.textContent = rsi.toFixed(2);
+                this.elements.macdValue.textContent = macd.toFixed(2);
+                this.elements.bbValue.textContent = `${bb.lower.toFixed(2)} - ${bb.upper.toFixed(2)}`;
+            }
+
+            calculateRSI(period = 14) {
+                if (this.priceHistory.length < period) return 50;
+
+                const changes = this.priceHistory.slice(-period).map((price, index, arr) => {
+                    if (index === 0) return 0;
+                    return price - arr[index - 1];
+                }).slice(1);
+
+                const gains = changes.filter(change => change > 0);
+                const losses = changes.filter(change => change < 0).map(Math.abs);
+
+                const avgGain = gains.reduce((sum, gain) => sum + gain, 0) / period;
+                const avgLoss = losses.reduce((sum, loss) => sum + loss, 0) / period;
+
+                if (avgLoss === 0) return 100;
+
+                const rs = avgGain / avgLoss;
+                return 100 - (100 / (1 + rs));
+            }
+
+            calculateMACD(shortPeriod = 12, longPeriod = 26, signalPeriod = 9) {
+                if (this.priceHistory.length < longPeriod) return 0;
+
+                const shortEMA = this.calculateEMA(shortPeriod);
+                const longEMA = this.calculateEMA(longPeriod);
+                const macdLine = shortEMA - longEMA;
+
+                const signalLine = this.calculateEMA(signalPeriod, this.priceHistory.slice(-signalPeriod).map(() => macdLine));
+
+                return macdLine - signalLine;
+            }
+
+            calculateEMA(period, data = this.priceHistory) {
+                const k = 2 / (period + 1);
+                return data.slice(-period).reduce((ema, price, index) => {
+                    if (index === 0) return price;
+                    return (price * k) + (ema * (1 - k));
+                }, 0);
+            }
+
+            calculateBollingerBands(period = 20, multiplier = 2) {
+                if (this.priceHistory.length < period) return { upper: 0, lower: 0 };
+
+                const sma = this.priceHistory.slice(-period).reduce((sum, price) => sum + price, 0) / period;
+                const squaredDifferences = this.priceHistory.slice(-period).map(price => Math.pow(price - sma, 2));
+                const standardDeviation = Math.sqrt(squaredDifferences.reduce((sum, squared) => sum + squared, 0) / period);
+
+                return {
+                    upper: sma + (multiplier * standardDeviation),
+                    lower: sma - (multiplier * standardDeviation)
+                };
+            }
+
+            runNeuralNetwork() {
+                const rsi = this.calculateRSI();
+                const macd = this.calculateMACD();
+                const bb = this.calculateBollingerBands();
+
+                // Simple decision-making based on indicators
+                let callProbability = 0;
+
+                if (rsi < 30) callProbability += 0.3;
+                if (rsi > 70) callProbability -= 0.3;
+
+                if (macd > 0) callProbability += 0.3;
+                if (macd < 0) callProbability -= 0.3;
+
+                if (this.currentPrice < bb.lower) callProbability += 0.3;
+                if (this.currentPrice > bb.upper) callProbability -= 0.3;
+
+               // Normalize probability between 0 and 1
+                callProbability = Math.max(0, Math.min(1, callProbability));
+
+                this.prediction = (callProbability * 100).toFixed(2);
+                const predictionElement = this.elements.predictionDisplay;
+                
+                predictionElement.textContent = `${this.prediction}%`;
+                predictionElement.classList.remove('up', 'down');
+                
+                if (callProbability > 0.7) {
+                    predictionElement.textContent += ' (Call/Up)';
+                    predictionElement.classList.add('up');
+                    this.placeTrade('CALL');
+                } else if (callProbability < 0.3) {
+                    predictionElement.textContent += ' (Put/Down)';
+                    predictionElement.classList.add('down');
+                    this.placeTrade('PUT');
+                } else {
+                    predictionElement.textContent += ' (Neutral)';
+                }
+            }
+
+            placeTrade(direction) {
+                const proposal = {
+                    proposal: 1,
+                    amount: parseFloat(this.elements.stakeAmount.value),
+                    basis: 'stake',
+                    contract_type: direction,
+                    currency: 'USD',
+                    symbol: 'R_100',
+                    duration: 5,
+                    duration_unit: 't'
+                };
+
+                this.sendMessage(proposal);
+            }
+
+            monitorTrade(contract) {
+                const stopLoss = parseFloat(this.elements.stopLoss.value);
+                const takeProfit = parseFloat(this.elements.takeProfit.value);
+                const profit = contract.profit;
+
+                if (profit <= -stopLoss || profit >= takeProfit) {
+                    this.sendMessage({
+                        sell: contract.contract_id
+                    });
+                }
+            }
+
+            showError(message) {
+                this.elements.errorAlert.textContent = message;
+                this.elements.errorAlert.style.display = 'block';
+                setTimeout(() => {
+                    this.elements.errorAlert.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Initialize the trading bot when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const bot = new DerivTradingBot();
+        });
+    </script>
+</body>
+</html>
+

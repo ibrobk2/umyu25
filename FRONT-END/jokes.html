@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random DadJokes</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Random Dad Jokes</h2>
+        <button>Click for a new joke</button>
+
+        <div class="joke">
+            <h3></h3>
+            <p></p>
+    </div>
+
+    <script>
+        const button = document.querySelector('button');
+        const joke = document.querySelector('.joke');
+        const h3 = joke.querySelector('h3');
+        const p = joke.querySelector('p');
+
+        button.addEventListener('click', async () => {
+            // const res = await fetch('https://official-joke-api.appspot.com/random_joke', {
+            //     headers: {
+            //         Accept: 'application/json'
+            //     }
+            // });
+            // const data = await res.json();
+            // h3.textContent = data.setup;
+            // p.textContent = data.punchline;
+            await fetch('https://official-joke-api.appspot.com/random_joke')
+                .then((response) => response.json())
+                .then((x) => {
+                    h3.innerHTML = x.setup;
+                    p.innerHTML = x.punchline;                
+            })
+        });
+    </script>
+</body>
+</html>

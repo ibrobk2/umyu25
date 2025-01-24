@@ -1,0 +1,57 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #000000;
+    color: orange;
+    font-family: 'Roboto', sans-serif;
+
+
+}
+
+input{
+    width: 100%;
+    height: 40px;
+    border: 1px solid orange;
+    border-radius: 5px;
+    padding: 0 10px;
+    background: transparent;
+    color: orange;
+    font-size: 16px;
+    outline: none;
+
+}
+
+button{
+    width: 100%;
+    height: 40px;
+    border: 1px solid orange;
+    border-radius: 5px;
+    background: orange;
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition:all 0.3s ease-in-out;
+   
+
+
+
+}
+
+
+button:hover {
+    background-color: black;
+    cursor: pointer;
+    color: orange;
+    border: orange 1px solid;
+    font-weight: 700;
+}

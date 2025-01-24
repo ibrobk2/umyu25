@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabets</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            width: 100%;
+            height: 100vh;
+        }
+
+        .container{
+            width: 80%;
+            height: 80%;
+            margin: auto;
+            margin-top: 50px;
+            background-color: #f1f6f8;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2rem;
+            box-shadow: 1px 1px 5px 1px black;
+            font-family: sans-serif;
+        }
+
+        h1{
+            margin-top: -80px;
+            color: dodgerblue;
+            margin-bottom: 15px;
+            font-size: 55px;
+        }
+
+        .btns{
+                      
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.75rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            
+        }
+
+        button{
+            padding: 10px;
+            font-size: 45px;
+            background-color: black;
+            color: #fff;
+            box-shadow: 1px 5px 4px 1px #777;
+            border-radius: 8px;
+            width: 250px;
+           
+        }
+
+        button:hover{
+            background-color: #777;
+            color: black;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="txt">Learn Alphabets</h1>
+
+        <div class="btns">
+            <button id="a">A</button>
+            <!-- <button id="a">A</button> -->
+            <button id="b">B</button>
+            <button id="c">C</button>
+            <button id="d">D</button>
+            <button id="e">E</button>
+            <button id="f">F</button>
+            <button id="g">G</button>
+            <button id="h">H</button>
+            <button id="i">I</button>
+            <button id="j">J</button>
+            <button id="k">K</button>
+            <button id="l">L</button>
+            <button id="m">M</button>
+            <button id="n">N</button>
+            <button id="o">O</button>
+            <button id="p">P</button>
+            <button id="q">Q</button>
+            <button id="r">R</button>
+            <button id="s">S</button>
+            <button id="t">T</button>
+            <button id="u">U</button>
+            <button id="v">V</button>
+            <button id="w">W</button>
+            <button id="x">X</button>
+            <button id="y">Y</button>
+            <button id="z">Z</button>
+        </div>
+    </div>
+
+    <script>
+        const my_text = document.getElementById('txt');
+
+        const a = document.getElementById('a');
+        const b = document.getElementById('b');
+        const c = document.getElementById('c');
+        const d = document.getElementById('d');
+        const e = document.getElementById('e');
+        const f = document.getElementById('f');
+        const g = document.getElementById('g');
+        const h = document.getElementById('h');
+        const i = document.getElementById('i');
+        const j = document.getElementById('j');
+        const k = document.getElementById('k');
+        const l = document.getElementById('l');
+        const m = document.getElementById('m');
+        const n = document.getElementById('n');
+        const o = document.getElementById('o');
+        const p = document.getElementById('p');
+        const q = document.getElementById('q');
+        const r = document.getElementById('r');
+        const s = document.getElementById('s');
+        const t = document.getElementById('t');
+        const u = document.getElementById('u');
+        const v = document.getElementById('v');
+        const w = document.getElementById('w');
+        const x = document.getElementById('x');
+        const y = document.getElementById('y');
+        const z = document.getElementById('z');
+
+        a.addEventListener('click', function(){my_text.innerHTML='A'});
+        b.addEventListener('click', function(){my_text.innerHTML='B'});
+        c.addEventListener('click', function(){my_text.innerHTML='C'});
+        d.addEventListener('click', function(){my_text.innerHTML='D'});
+        e.addEventListener('click', function(){my_text.innerHTML='E'});
+        f.addEventListener('click', function(){my_text.innerHTML='F'});
+        g.addEventListener('click', function(){my_text.innerHTML='G'});
+        h.addEventListener('click', function(){my_text.innerHTML='H'});
+        i.addEventListener('click', function(){my_text.innerHTML='I'});
+        j.addEventListener('click', function(){my_text.innerHTML='J'});
+        k.addEventListener('click', function(){my_text.innerHTML='K'});
+        l.addEventListener('click', function(){my_text.innerHTML='L'});
+        m.addEventListener('click', function(){my_text.innerHTML='M'});
+        n.addEventListener('click', function(){my_text.innerHTML='N'});
+        o.addEventListener('click', function(){my_text.innerHTML='O'});
+        p.addEventListener('click', function(){my_text.innerHTML='P'});
+        q.addEventListener('click', function(){my_text.innerHTML='Q'});
+        r.addEventListener('click', function(){my_text.innerHTML='R'});
+        s.addEventListener('click', function(){my_text.innerHTML='S'});
+        t.addEventListener('click', function(){my_text.innerHTML='T'});
+        u.addEventListener('click', function(){my_text.innerHTML='U'});
+        v.addEventListener('click', function(){my_text.innerHTML='V'});
+        w.addEventListener('click', function(){my_text.innerHTML='W'});
+        x.addEventListener('click', function(){my_text.innerHTML='X'});
+        y.addEventListener('click', function(){my_text.innerHTML='Y'});
+        z.addEventListener('click', function(){my_text.innerHTML='Z'});
+    </script>
+</body>
+</html>

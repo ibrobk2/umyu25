@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        img {   
+            /* width: 100px;
+            height: 100px; */
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: orange;
+            color: white;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button:hover {
+            background-color: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <img src="./images/pic_bulboff.gif" alt="" id="bulb">
+    <h2 id="txt">Hello</h2>
+    <button id="on">Turn On</button>
+    <button id="off">Turn Off</button>
+
+    <script>
+        const btn_on = document.getElementById('on');
+        const btn_off = document.getElementById('off');
+        const txt = document.getElementById('txt');
+        const bulb = document.getElementById('bulb');
+        btn_on.addEventListener('click', () => {
+                bulb.src = './images/pic_bulbon.gif';
+                txt.textContent = 'The light is on';
+                txt.style.color = 'green';
+        });
+
+        btn_off.addEventListener('click', () => {
+                bulb.src = './images/pic_bulboff.gif';
+                txt.textContent = 'The light is off';
+                txt.style.color = 'red';
+        });
+    </script>
+</body>
+</html>
