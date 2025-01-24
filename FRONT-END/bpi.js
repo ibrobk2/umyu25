@@ -15,3 +15,5 @@ document.getElementById('gbp').innerHTML = '&pound;'+gbp_rate;
 }
 
 setInterval(bpi, 1000);
+
+// this is good
